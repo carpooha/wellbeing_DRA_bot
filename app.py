@@ -129,7 +129,7 @@ async def cmd_start(message: types.Message):
     if announcement:
         welcome_text = f"☕️ Привет! мы тут скидываемся на вскусняшки!!\n\n📢 ОБЪЯВЛЕНИЕ:\n{announcement}\n\n---\nВыберите действие:"
     else:
-        welcome_text = "☕️ Добро пожаловать в Кофе-Бот!\n\nВыберите действие:"
+        welcome_text = "Привет! мы тут скидываемся на вкусняшки!\n\nВыберите действие:"
     await message.answer(welcome_text, reply_markup=get_main_keyboard())
 
 @dp.message(Command("users")) # --- считаем пользователей ---
