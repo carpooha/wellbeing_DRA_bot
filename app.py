@@ -16,7 +16,7 @@ API_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 if not API_TOKEN:
     raise ValueError("ERROR: Token not found!")
 
-ADMIN_ID = 152676166  # ЗАМЕНИТЕ НА СВОЙ ID
+ADMINS = [152676166, 760764610]  # ЗАМЕНИТЕ НА СВОЙ ID
 
 # --- База данных ---
 db = TinyDB('coffee_db.json')
@@ -102,12 +102,12 @@ def run_flask():
 
 # --- Клавиатура ---
 def get_main_keyboard():
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📖 Где кофе и молоко?", callback_data="instruction")],
-        [InlineKeyboardButton(text="💰 Финансы", callback_data="finance")],
-        [InlineKeyboardButton(text="💸 Скинуться на кофе", callback_data="donate")],
-        [InlineKeyboardButton(text="📝 Обратная связь", callback_data="feedback")]
-    ])
+    keyboard = InlineKeyboardMarkup(row_width=1)
+    keyboard.add(
+        InlineKeyboardButton(text="💸 Скинуться на вкусняшки", callback_data="donate"),
+        InlineKeyboardButton(text="💰 Наши финансы", callback_data="finance"),
+        InlineKeyboardButton(text="📝 Обратная связь", callback_data="feedback")
+    )
     return keyboard
 
 # --- Бот ---
@@ -133,7 +133,7 @@ async def cmd_start(message: types.Message):
 
 @dp.message(Command("users")) # --- считаем пользователей ---
 async def cmd_users(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id != ADMINS:
         await message.answer("Нет прав")
         return
     count = len(users.all())
@@ -157,7 +157,7 @@ async def show_finance(callback: types.CallbackQuery):
 
 @dp.callback_query(lambda c: c.data == "donate")
 async def show_donate(callback: types.CallbackQuery):
-    text = "💸 Ссылка на сбор: https://vtb.paymo.ru/collect-money/?transaction=c208d1eb-2b1a-47f8-9d41-835e1a005ee8"
+    text = "💸 Ссылка на сбор: https://www.tbank.ru/cf/1f6vnWnk5Xf"
     await callback.message.answer(text)
     await callback.answer()
 
@@ -167,7 +167,7 @@ async def show_donate(callback: types.CallbackQuery):
 @dp.message(Command("feedbacks"))
 async def show_feedbacks(message: types.Message):
     """Показать все отзывы (только для админа)"""
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id != ADMINS:
         await message.answer("Нет прав")
         return
     
@@ -188,7 +188,7 @@ async def show_feedbacks(message: types.Message):
 # --- АДМИН КОМАНДЫ ---
 @dp.message(Command("add"))
 async def cmd_add_money(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id != ADMINS:
         await message.answer("Нет прав")
         return
     try:
@@ -200,7 +200,7 @@ async def cmd_add_money(message: types.Message):
 
 @dp.message(Command("spend"))
 async def cmd_spend_money(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id != ADMINS:
         await message.answer("Нет прав")
         return
     try:
@@ -214,7 +214,7 @@ async def cmd_spend_money(message: types.Message):
 
 @dp.message(Command("stats"))
 async def cmd_stats(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id != ADMINS:
         await message.answer("Нет прав")
         return
     data = finances.all()[0]
@@ -223,7 +223,7 @@ async def cmd_stats(message: types.Message):
 
 @dp.message(Command("announce"))
 async def cmd_announce(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id != ADMINS:
         await message.answer("Нет прав")
         return
     try:
@@ -235,7 +235,7 @@ async def cmd_announce(message: types.Message):
 
 @dp.message(Command("clear_announce"))
 async def cmd_clear_announce(message: types.Message):
-    if message.from_user.id != ADMIN_ID:
+    if message.from_user.id != ADMINS:
         await message.answer("Нет прав")
         return
     save_announcement("")
@@ -289,7 +289,7 @@ async def handle_feedback_text(message: types.Message):
     # Отправляем уведомление администратору
     try:
         admin_message = f"📝 НОВЫЙ ОТЗЫВ\n\nОтправитель: {full_name}\nUsername: @{username}\n\nСообщение:\n{feedback_text}"
-        await bot.send_message(ADMIN_ID, admin_message)
+        await bot.send_message(ADMINS, admin_message)
     except:
         pass  # Если не отправилось — не страшно, отзыв сохранён в БД
 
