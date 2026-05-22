@@ -187,11 +187,15 @@ async def show_feedbacks(message: types.Message):
     await message.answer(text)
 
 # --- АДМИН КОМАНДЫ ---
-@dp.message(Command("add"))
+@dp.message_handler(Command("add"))
 async def cmd_add_money(message: types.Message):
-    if message.from_user.id != ADMINS:
-        await message.answer("Нет прав")
+    user_id = message.from_user.id
+    await message.answer(f"Диагностика: ваш ID = {user_id}, ADMINS = {ADMINS}")
+    
+    if user_id not in ADMINS:
+        await message.answer(f"⛔️ Нет прав. Ваш ID {user_id} не в списке {ADMINS}")
         return
+    
     try:
         amount = float(message.text.split()[1])
         add_collected(amount)
