@@ -16,7 +16,7 @@ API_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 if not API_TOKEN:
     raise ValueError("ERROR: Token not found!")
 
-ADMINS = [152676166, 760764610]  # ЗАМЕНИТЕ НА СВОЙ ID
+ADMIN_ID  = [760764610]  # ЗАМЕНИТЕ НА СВОЙ ID
 
 # --- База данных ---
 db = TinyDB('coffee_db.json')
@@ -134,7 +134,7 @@ async def cmd_start(message: types.Message):
 
 @dp.message(Command("users")) # --- считаем пользователей ---
 async def cmd_users(message: types.Message):
-    if message.from_user.id != ADMINS:
+    if message.from_user.id != ADMIN_ID:
         await message.answer("Нет прав")
         return
     count = len(users.all())
@@ -168,7 +168,7 @@ async def show_donate(callback: types.CallbackQuery):
 @dp.message(Command("feedbacks"))
 async def show_feedbacks(message: types.Message):
     """Показать все отзывы (только для админа)"""
-    if message.from_user.id != ADMINS:
+    if message.from_user.id != ADMIN_ID:
         await message.answer("Нет прав")
         return
     
@@ -189,7 +189,7 @@ async def show_feedbacks(message: types.Message):
 # --- АДМИН КОМАНДЫ ---
 @dp.message(Command("add"))
 async def cmd_add_money(message: types.Message):
-    if message.from_user.id != ADMINS:
+    if message.from_user.id != ADMIN_ID:
         await message.answer("Нет прав")
         return
     try:
@@ -201,7 +201,7 @@ async def cmd_add_money(message: types.Message):
 
 @dp.message(Command("spend"))
 async def cmd_spend_money(message: types.Message):
-    if message.from_user.id != ADMINS:
+    if message.from_user.id != ADMIN_ID:
         await message.answer("Нет прав")
         return
     try:
@@ -215,7 +215,7 @@ async def cmd_spend_money(message: types.Message):
 
 @dp.message(Command("stats"))
 async def cmd_stats(message: types.Message):
-    if message.from_user.id != ADMINS:
+    if message.from_user.id != ADMIN_ID:
         await message.answer("Нет прав")
         return
     data = finances.all()[0]
@@ -224,7 +224,7 @@ async def cmd_stats(message: types.Message):
 
 @dp.message(Command("announce"))
 async def cmd_announce(message: types.Message):
-    if message.from_user.id != ADMINS:
+    if message.from_user.id != ADMIN_ID:
         await message.answer("Нет прав")
         return
     try:
@@ -236,7 +236,7 @@ async def cmd_announce(message: types.Message):
 
 @dp.message(Command("clear_announce"))
 async def cmd_clear_announce(message: types.Message):
-    if message.from_user.id != ADMINS:
+    if message.from_user.id != ADMIN_ID:
         await message.answer("Нет прав")
         return
     save_announcement("")
@@ -290,7 +290,7 @@ async def handle_feedback_text(message: types.Message):
     # Отправляем уведомление администратору
     try:
         admin_message = f"📝 НОВЫЙ ОТЗЫВ\n\nОтправитель: {full_name}\nUsername: @{username}\n\nСообщение:\n{feedback_text}"
-        await bot.send_message(ADMINS, admin_message)
+        await bot.send_message(ADMIN_ID, admin_message)
     except:
         pass  # Если не отправилось — не страшно, отзыв сохранён в БД
 
