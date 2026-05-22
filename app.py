@@ -16,7 +16,7 @@ API_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 if not API_TOKEN:
     raise ValueError("ERROR: Token not found!")
 
-ADMIN_ID  = [760764610]  # ЗАМЕНИТЕ НА СВОЙ ID
+ADMIN_ID  = 760764610  # ЗАМЕНИТЕ НА СВОЙ ID
 
 # --- База данных ---
 db = TinyDB('coffee_db.json')
