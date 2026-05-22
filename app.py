@@ -132,6 +132,11 @@ async def cmd_start(message: types.Message):
         welcome_text = "Привет! мы тут скидываемся на вкусняшки!\n\nВыберите действие:"
     await message.answer(welcome_text, reply_markup=get_main_keyboard())
 
+@dp.message_handler(Command("myid"))
+async def show_my_id(message: types.Message):
+    user_id = message.from_user.id
+    await message.answer(f"🔍 Ваш ID: `{user_id}`\n👑 ADMIN_ID: `{ADMIN_ID}`", parse_mode="Markdown")
+
 @dp.message(Command("users")) # --- считаем пользователей ---
 async def cmd_users(message: types.Message):
     if message.from_user.id != ADMIN_ID:
