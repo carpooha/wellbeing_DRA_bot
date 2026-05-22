@@ -297,7 +297,7 @@ async def handle_feedback_text(message: types.Message):
 # --- Запуск ---
 async def start_bot():
     await bot.delete_webhook(drop_pending_updates=True)
-    print("🤖 Кофе-бот запущен!")
+    print("🤖 Вкусняшки бот запущен!")
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
