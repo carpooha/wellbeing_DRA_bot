@@ -102,11 +102,12 @@ def run_flask():
 
 # --- Клавиатура ---
 def get_main_keyboard():
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    keyboard.add(
-        InlineKeyboardButton(text="💸 Скинуться на вкусняшки", callback_data="donate"),
-        InlineKeyboardButton(text="💰 Наши финансы", callback_data="finance"),
-        InlineKeyboardButton(text="📝 Обратная связь", callback_data="feedback")
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="💸 Скинуться на вкусняшки", callback_data="donate")],
+            [InlineKeyboardButton(text="💰 Наши финансы", callback_data="finance")],
+            [InlineKeyboardButton(text="📝 Обратная связь", callback_data="feedback")]
+        ]
     )
     return keyboard
 
